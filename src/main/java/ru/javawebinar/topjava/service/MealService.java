@@ -1,10 +1,9 @@
-package ru.javawebinar.topjava.service.impl;
+package ru.javawebinar.topjava.service;
 
 import ru.javawebinar.topjava.dao.IMealDao;
-import ru.javawebinar.topjava.dao.impl.MealDaoMemoryImpl;
+import ru.javawebinar.topjava.dao.MealDaoMemoryImpl;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.service.IMealService;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +38,7 @@ public class MealService implements IMealService {
         if (id != null && !id.isEmpty()) {
             mealId = Long.parseLong(id);
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyy HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"), formatter);
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
@@ -47,12 +46,14 @@ public class MealService implements IMealService {
         return new Meal(mealId, dateTime, description, calories);
     }
 
-    private void create(Meal meal) {
-        mealDao.create(meal);
+    @Override
+    public Meal create(Meal meal) {
+        return mealDao.create(meal);
     }
 
-    private void update(Meal meal) {
-        mealDao.update(meal);
+    @Override
+    public Meal update(Meal meal) {
+        return mealDao.update(meal);
     }
 
     @Override
@@ -65,17 +66,12 @@ public class MealService implements IMealService {
     }
 
     @Override
-    public void delete(Long mealId) {
-        mealDao.delete(mealId);
+    public void delete(Long id) {
+        mealDao.delete(id);
     }
 
     @Override
-    public Meal getById(Long mealId) {
-        return mealDao.getById(mealId);
-    }
-
-    @Override
-    public void initDB() {
-        mealDao.initDB();
+    public Meal getById(Long id) {
+        return mealDao.getById(id);
     }
 }

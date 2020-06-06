@@ -11,9 +11,11 @@ public interface IMealService {
 
     List<MealTo> getAll();
 
-    void delete(Long mealId);
+    void delete(Long id);
 
-    Meal getById(Long mealId);
+    Meal getById(Long id);
 
-    void initDB();
+    Meal create(Meal meal);
+
+    Meal update(Meal meal);
 }

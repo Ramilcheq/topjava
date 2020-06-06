@@ -1,0 +1,16 @@
+TABLE {
+    width: 600px;
+    border-collapse: collapse;
+}
+
+TD, TH {
+    padding: 3px;
+    border: 1px solid
+}
+
+tr.normal-meals {
+    background-color: green;
+}
+tr.exceeded-meals {
+    background-color: red;
+}
