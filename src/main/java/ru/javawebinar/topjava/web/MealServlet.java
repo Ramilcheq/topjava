@@ -82,8 +82,8 @@ public class MealServlet extends HttpServlet {
     }
 
     private void delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        log.debug("deleting meal");
         Long mealId = Long.parseLong(request.getParameter("mealId"));
+        log.debug("deleting meal with id = {}", mealId);
         mealService.delete(mealId);
         response.sendRedirect("meals");
     }
@@ -91,8 +91,13 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        log.debug("editing/adding meal");
         request.setCharacterEncoding("UTF-8");
+        String mealId = request.getParameter("mealId");
+        if (mealId == null) {
+            log.debug("adding new meal");
+        } else {
+            log.debug("editing meal with id = {}", mealId);
+        }
         mealService.saveMeal(request);
         response.sendRedirect("meals");
     }

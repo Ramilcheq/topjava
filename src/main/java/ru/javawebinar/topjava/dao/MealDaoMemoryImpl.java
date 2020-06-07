@@ -4,12 +4,13 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class MealDaoMemoryImpl implements IMealDao {
     private final AtomicLong daoId = new AtomicLong(0L);
-    private final ConcurrentHashMap<Long, Meal> mealsInMemory = new ConcurrentHashMap<>();
+    private final Map<Long, Meal> mealsInMemory = new ConcurrentHashMap<>();
 
     @Override
     public Meal create(Meal meal) {
@@ -22,10 +23,7 @@ public class MealDaoMemoryImpl implements IMealDao {
     public Meal update(Meal meal) {
         Long mealId = meal.getId();
         if (mealId != null) {
-            if (mealsInMemory.get(mealId) != null) {
-                mealsInMemory.put(mealId, meal);
-                return meal;
-            }
+            return mealsInMemory.computeIfPresent(mealId, (key, value) -> meal);
         }
         return null;
     }
