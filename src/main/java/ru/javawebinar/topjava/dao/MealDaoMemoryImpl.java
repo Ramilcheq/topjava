@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class MealDaoMemoryImpl implements IMealDao {
     private final AtomicLong daoId = new AtomicLong(0L);
-    public static ConcurrentHashMap<Long, Meal> mealsInMemory = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Meal> mealsInMemory = new ConcurrentHashMap<>();
 
     @Override
     public Meal create(Meal meal) {
@@ -20,16 +20,19 @@ public class MealDaoMemoryImpl implements IMealDao {
 
     @Override
     public Meal update(Meal meal) {
-        Meal mealFromMemory = getById(meal.getId());
-        mealFromMemory.setDateTime(meal.getDateTime());
-        mealFromMemory.setDescription(meal.getDescription());
-        mealFromMemory.setCalories(meal.getCalories());
-        return mealFromMemory;
+        Long mealId = meal.getId();
+        if (mealId != null) {
+            if (mealsInMemory.get(mealId) != null) {
+                mealsInMemory.put(mealId, meal);
+                return meal;
+            }
+        }
+        return null;
     }
 
     @Override
     public Meal getById(Long id) {
-        return mealsInMemory.getOrDefault(id, null);
+        return mealsInMemory.get(id);
     }
 
     @Override

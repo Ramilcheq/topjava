@@ -20,13 +20,11 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
     private static final String INSERT_OR_EDIT = "meal.jsp";
     private static final String MEAL_LIST = "meals.jsp";
-    private final IMealService mealService;
+    private IMealService mealService;
 
-    public MealServlet() {
-        this.mealService = new MealService();
-    }
-
+    @Override
     public void init() {
+        mealService = new MealService();
         mealService.create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
         mealService.create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
         mealService.create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
@@ -39,37 +37,35 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        log.debug("redirect to meals");
+
         String action = request.getParameter("action");
 
-        if (action == null) {
-            listMeal(request, response);
-        } else {
-            switch (action) {
-                case "new":
-                    showNewForm(request, response);
-                    break;
-                case "edit":
-                    showEditForm(request, response);
-                    break;
-                case "delete":
-                    delete(request, response);
-                    break;
-                default:
-                    listMeal(request, response);
-                    break;
-            }
+        switch (action == null ? "" : action) {
+            case "new":
+                showNewForm(request, response);
+                break;
+            case "edit":
+                showEditForm(request, response);
+                break;
+            case "delete":
+                delete(request, response);
+                break;
+            default:
+                listMeal(request, response);
+                break;
         }
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        log.debug("new meal form");
         RequestDispatcher view = request.getRequestDispatcher(INSERT_OR_EDIT);
         view.forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        log.debug("update meal form");
         Long mealId = Long.parseLong(request.getParameter("mealId"));
         Meal meal = mealService.getById(mealId);
         request.setAttribute("meal", meal);
@@ -79,12 +75,14 @@ public class MealServlet extends HttpServlet {
 
     private void listMeal(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        log.debug("meal list");
         request.setAttribute("meals", mealService.getAll());
         RequestDispatcher view = request.getRequestDispatcher(MEAL_LIST);
         view.forward(request, response);
     }
 
     private void delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.debug("deleting meal");
         Long mealId = Long.parseLong(request.getParameter("mealId"));
         mealService.delete(mealId);
         response.sendRedirect("meals");
@@ -93,6 +91,7 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        log.debug("editing/adding meal");
         request.setCharacterEncoding("UTF-8");
         mealService.saveMeal(request);
         response.sendRedirect("meals");

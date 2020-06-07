@@ -16,6 +16,7 @@ public class MealService implements IMealService {
     private final static LocalTime startTime = LocalTime.MIN;
     private final static LocalTime endTime = LocalTime.MAX;
     private final static int caloriesPerDay = 2000;
+    private final static DateTimeFormatter mealDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final IMealDao mealDao;
 
     public MealService() {
@@ -38,8 +39,7 @@ public class MealService implements IMealService {
         if (id != null && !id.isEmpty()) {
             mealId = Long.parseLong(id);
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"), formatter);
+        LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"), mealDateFormatter);
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
 

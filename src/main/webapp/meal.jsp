@@ -1,5 +1,5 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
 <%@ page contentType="text/html;charset=utf-8" %>
 
 <html>
@@ -9,12 +9,10 @@
 </head>
 <body>
 <form method="POST" action='meals' name="frmAddMeal">
-    <c:if test="${meal != null}">
-        Id : <input readonly
+    <input
+            hidden
             type="text" name="mealId"
             value="${meal.id}"/>
-    </c:if>
-    <br/>
     Date and time : <input
         type="datetime-local" name="dateTime"
         value="<javatime:format pattern="yyyy-MM-dd'T'HH:mm" value="${meal.dateTime}" />"/> <br/>
@@ -22,7 +20,7 @@
         type="text" name="description"
         value="${meal.description}"/> <br/>
     Calories : <input
-        type="text" name="calories"
+        type="number" name="calories"
         value="${meal.calories}"/> <br/>
     <input type="submit" value="Submit"/>
 </form>
