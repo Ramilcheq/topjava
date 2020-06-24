@@ -76,7 +76,7 @@ public class JdbcMealRepository implements MealRepository {
         return jdbcTemplate.query(
                 "SELECT * " +
                     "FROM meals " +
-                    "WHERE datetime BETWEEN ? AND ? AND user_id = ?" +
+                    "WHERE datetime >= ? AND datetime < ? AND user_id = ?" +
                     "ORDER BY datetime DESC",
                 ROW_MAPPER, startDate, endDate, userId);
     }
